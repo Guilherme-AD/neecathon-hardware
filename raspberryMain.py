@@ -12,8 +12,11 @@ from requests import get
 
 
 #GPIO
-BUT_1 = Button(2)
-LED_1 = LED(17)
+BUT_1 = Button(27)
+LED_R = LED(25)
+LED_G = LED(23)
+LED_B = LED(24)
+
 
 #Main loop
 while True:
@@ -24,8 +27,8 @@ while True:
     #Recording state
     if(BUT_1.is_active):
         #Wait for 2 seconds and turn indicator light on
-        sleep(2)
-        LED_1.on
+        sleep(1)
+        LED_G.on
         try:
             while True:
                 data=stream.read(1024)
@@ -88,5 +91,5 @@ while True:
 
         #Indicator light off
         sleep(2)
-        LED_1.off
+        LED_G.off
         
