@@ -41,7 +41,7 @@ with sr.AudioFile(audio_file) as source:
     audio = r.record(source)  # read the entire audio file
 
 # recognize speech using Google Speech Recognition
-comment = str("placeholder")
+comment = str("NOT_RECOGNIZED_BY_ANY")
 
 try:
     comment = str(r.recognize_google(audio, language = 'en-US'))
@@ -62,15 +62,12 @@ except sr.RequestError as e:
     except sr.RequestError as e:
         print("Sphinx error; {0}".format(e)) 
 
-#Deleting the audio file
-os.remove("audio_file"+ str(fileDate) +".wav")
-
 #Sending to backend
 try:
     comment_analysis = requests.get(f"http://3.88.45.53:8000/appForNlp/nlp_result?comentario={comment}&id_pessoa={0}", timeout=5)
 except:
     print("Connection Failed")
-    comment_analysis = "placeholder"
+    comment_analysis = "CONNECTION_FAILED"
 
-print(comment_analysis)
-print(comment)
+#Deleting the audio file
+os.remove("audio_file"+ str(fileDate) +".wav")

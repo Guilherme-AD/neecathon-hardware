@@ -1,26 +1,91 @@
+from gpiozero import LED, Button
 import speech_recognition as sr
 import pyaudio
+import wave
+from os import path
+import os
 from gpiozero import LED, Button
+import time
 from time import sleep
+import requests
+from requests import get
+
 
 #GPIO
 BUT_1 = Button(2)
 LED_1 = LED(17)
 
-#PyAudio
-audio = pyaudio.PyAudio()
-stream = audio.open(format=pyaudio.paInt16, channels=1, rate=44100, input=True, frames_per_buffer=1024)
-frames = []
-
 #Main loop
 while True:
-    #FACE_RECOGNITION State
-    if BUT_1.is_active:
-        faceFlag = True
-        while not(faceFlag):
-            pass
+    #PyAudio
+    audio = pyaudio.PyAudio()
+    stream = audio.open(format=pyaudio.paInt16, channels=1, rate=44100, input=True, frames_per_buffer=1024, input_device_index=1)
+    frames = []
+    #Recording state
+    if(BUT_1.is_active):
+        #Wait for 2 seconds and turn indicator light on
+        sleep(2)
         LED_1.on
-        #BUTTON_PRESSED
-        while not(BUT_1.is_active and faceFlag):
+        try:
+            while True:
+                data=stream.read(1024)
+                frames.append(data)
+                if BUT_1.is_active:
+                    raise KeyboardInterrupt
+        except KeyboardInterrupt: #User input stops recording
             pass
+
+        stream.stop_stream()
+        stream.close()
+        audio.terminate()
+
+        fileDate = time.strftime("%Y%m%d-%H%M%S")
+        audio_file = wave.open("audio_file"+ str(fileDate) +".wav", "wb")
+        audio_file.setnchannels(1)
+        audio_file.setsampwidth(audio.get_sample_size(pyaudio.paInt16))
+        audio_file.setframerate(44100)
+        audio_file.writeframes(b''.join(frames))
+        audio_file.close()
+
+        #Recognizing
+        audio_file = path.join(path.dirname(path.realpath(__file__)), "audio_file"+ str(fileDate) +".wav")
+
+        r = sr.Recognizer()
+        with sr.AudioFile(audio_file) as source:
+            audio = r.record(source)  # read the entire audio file
+
+        # recognize speech using Google Speech Recognition
+        comment = str("NOT_RECOGNIZED_BY_ANY")
+
+        try:
+            comment = str(r.recognize_google(audio, language = 'en-US'))
+        except sr.UnknownValueError:
+            print("Google Speech Recognition could not understand audio - Switching to Sphinx")
+            try:
+                comment = str(r.recognize_sphinx(audio, language = 'en-US'))
+            except sr.UnknownValueError:
+                print("Sphinx could not understand audio")
+            except sr.RequestError as e:
+                print("Sphinx error; {0}".format(e)) 
+        except sr.RequestError as e:
+            print("Could not request results from Google Speech Recognition service; {0}".format(e))
+            try:
+                comment = str(r.recognize_sphinx(audio, language = 'en-US'))
+            except sr.UnknownValueError:
+                print("Sphinx could not understand audio")
+            except sr.RequestError as e:
+                print("Sphinx error; {0}".format(e)) 
+
+        #Sending to backend
+        try:
+            comment_analysis = requests.get(f"http://3.88.45.53:8000/appForNlp/nlp_result?comentario={comment}&id_pessoa={0}", timeout=5)
+        except:
+            print("Connection Failed")
+            comment_analysis = "CONNECTION_FAILED"
+
+        #Deleting the audio file
+        os.remove("audio_file"+ str(fileDate) +".wav")
+
+        #Indicator light off
+        LED_1.off
         
