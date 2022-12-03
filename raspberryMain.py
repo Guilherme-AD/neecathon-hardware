@@ -68,7 +68,7 @@ while True:
             except sr.RequestError as e:
                 print("Sphinx error; {0}".format(e)) 
         except sr.RequestError as e:
-            print("Could not request results from Google Speech Recognition service; {0}".format(e))
+            print("Could not request results from Google Speech Recognition service - Switching to Sphinx; {0}".format(e))
             try:
                 comment = str(r.recognize_sphinx(audio, language = 'en-US'))
             except sr.UnknownValueError:
@@ -87,5 +87,6 @@ while True:
         os.remove("audio_file"+ str(fileDate) +".wav")
 
         #Indicator light off
+        sleep(2)
         LED_1.off
         
