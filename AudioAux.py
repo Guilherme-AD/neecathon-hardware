@@ -45,7 +45,7 @@ try:
             print("recording2")
             stream.stop_stream()
             stream.close()
-            wavefile = wave.open(wav_output_filename,'wb')
+            wavefile = wave.open(f"test{count}.wav",'wb')
             wavefile.setnchannels(chans)
             wavefile.setsampwidth(audio.get_sample_size(form_1))
             wavefile.setframerate(samp_rate)
