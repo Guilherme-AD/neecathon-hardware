@@ -31,10 +31,11 @@ try:
             LED_G.on()
             time.sleep(0.5)
             print("recording")
-            for ii in range(0,int((samp_rate/chunk)*3)):
-                print(ii)
-                data = stream.read(chunk)
+            while True:
+                data = stream.read(1024)
                 frames.append(data)
+                if BUT_1.is_active:
+                    break
             print("recording2")
             while True:
                 if(BUT_1.is_active):
