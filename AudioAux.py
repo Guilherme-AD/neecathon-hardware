@@ -25,15 +25,17 @@ stream = audio.open(format = form_1,rate = samp_rate,channels = chans, \
                     frames_per_buffer=chunk)
 print("recording")
 frames = []
-
-while True:
-    if(BUT_1.is_active):
-        LED_G.on()
-        time.sleep(0.5)
-        print("1")
-        while True:
-            if(BUT_1.is_active):
-                LED_G.off()
-                time.sleep(0.5)
-                print("2")
-                break
+try:
+    while True:
+        if(BUT_1.is_active):
+            LED_G.on()
+            time.sleep(0.5)
+            print("1")
+            while True:
+                if(BUT_1.is_active):
+                    LED_G.off()
+                    time.sleep(0.5)
+                    print("2")
+                    break
+except:
+    audio.terminate()
