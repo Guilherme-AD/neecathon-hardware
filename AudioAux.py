@@ -13,77 +13,69 @@ LED_R = LED(25)
 LED_G = LED(23)
 LED_B = LED(24)
 
-form_1 = pyaudio.paInt16 # 16-bit resolution
-chans = 1 # 1 channel
-samp_rate = 44100 # 44.1kHz sampling rate
-chunk = 1024 # 2^12 samples for buffer
-record_secs = 3 # seconds to record
-dev_index = 1 # device index found by p.get_device_info_by_index(ii)
-wav_output_filename = 'test1.wav' # name of .wav file
-
-audio = pyaudio.PyAudio() # create pyaudio instantiation
-
 print("init")
-frames = []
-count = 0
-try:
-    while True:
-        if(BUT_1.is_active):
-            count += 1
-            LED_G.on()
-            time.sleep(0.5)
-            # create pyaudio stream
-            stream = audio.open(format = form_1,rate = samp_rate,channels = chans, \
-                    input_device_index = dev_index,input = True, \
-                    frames_per_buffer=chunk)
-            print("recording")
-            while True:
-                data = stream.read(chunk, False)
-                frames.append(data)
-                if BUT_1.is_active:
-                    break
-            print("recording2")
-            stream.stop_stream()
-            stream.close()
-            print(stream.is_stopped)
-            wavefile = wave.open(f"test{count}.wav",'wb')
-            wavefile.setnchannels(chans)
-            wavefile.setsampwidth(audio.get_sample_size(form_1))
-            wavefile.setframerate(samp_rate)
-            wavefile.writeframes(b''.join(frames))
-            wavefile.close()
+while True:
+    if(BUT_1.is_active):
+        LED_G.on()
+        time.sleep(0.5)
+        # create pyaudio stream
+        form_1 = pyaudio.paInt16 # 16-bit resolution
+        chans = 1 # 1 channel
+        samp_rate = 44100 # 44.1kHz sampling rate
+        chunk = 1024 # 2^12 samples for buffer
+        record_secs = 3 # seconds to record
+        dev_index = 1 # device index found by p.get_device_info_by_index(ii)
+        wav_output_filename = 'test1.wav' # name of .wav file
 
-            #Recognizing
-            audio_file = path.join(path.dirname(path.realpath(__file__)), f"test{count}.wav")
+        audio = pyaudio.PyAudio() # create pyaudio instantiation
+        frames = []
+        stream = audio.open(format = form_1,rate = samp_rate,channels = chans, \
+                input_device_index = dev_index,input = True, \
+                frames_per_buffer=chunk)
+        print("recording")
+        while True:
+            data = stream.read(chunk) #False
+            frames.append(data)
+            if BUT_1.is_active:
+                break
+        print("recording2")
+        stream.stop_stream()
+        stream.close()
+        audio.terminate()
 
-            r = sr.Recognizer()
-            with sr.AudioFile(audio_file) as source:
-                audio2 = r.record(source)  # read the entire audio file
+        wavefile = wave.open("audio.wav",'wb')
+        wavefile.setnchannels(chans)
+        wavefile.setsampwidth(audio.get_sample_size(form_1))
+        wavefile.setframerate(samp_rate)
+        wavefile.writeframes(b''.join(frames))
+        wavefile.close()
 
-            # recognize speech using Google Speech Recognition
-            comment = str("NOT_RECOGNIZED_BY_ANY")
+        #Recognizing
+        audio_file = path.join(path.dirname(path.realpath(__file__)), "audio.wav")
 
-            try:
-                comment = str(r.recognize_google(audio2, language = 'pt-BR'))
-                print(comment)
-            except sr.UnknownValueError:
-                print("Google Speech Recognition could not understand audio")
-            except sr.RequestError as e:
-                print("Could not request results from Google Speech Recognition service; {0}".format(e))
+        r = sr.Recognizer()
+        with sr.AudioFile(audio_file) as source:
+            audio2 = r.record(source)  # read the entire audio file
 
-            #os.remove(f"test{count}.wav")
+        # recognize speech using Google Speech Recognition
+        comment = str("NOT_RECOGNIZED_BY_ANY")
 
-            try:
-                comment_analysis = requests.get(f"http://3.88.45.53:8000/appForNlp/nlp_result?comentario={comment}&id_pessoa={0}", timeout=5)
-            except:
-                print("Connection Failed")
-                comment_analysis = "CONNECTION_FAILED"
+        try:
+            comment = str(r.recognize_google(audio2, language = 'pt-BR'))
+            print(comment)
+        except sr.UnknownValueError:
+            print("Google Speech Recognition could not understand audio")
+        except sr.RequestError as e:
+            print("Could not request results from Google Speech Recognition service; {0}".format(e))
 
-            LED_G.off()
-            time.sleep(0.5)
-            print("2")
+        os.remove("audio.wav")
 
-except Exception as e: 
-    print(e)
-    print("orra")
-    audio.terminate()
+        try:
+            comment_analysis = requests.get(f"http://3.88.45.53:8000/appForNlp/nlp_result?comentario={comment}&id_pessoa={0}", timeout=5)
+        except:
+            print("Connection Failed")
+            comment_analysis = "CONNECTION_FAILED"
+
+        LED_G.off()
+        time.sleep(0.5)
+        print("2")
