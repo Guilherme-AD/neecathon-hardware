@@ -37,6 +37,6 @@ try:
                     time.sleep(0.5)
                     print("2")
                     break
-except:
+except KeyboardInterrupt:
     print("orra")
     audio.terminate()
