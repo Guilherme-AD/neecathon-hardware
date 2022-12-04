@@ -61,7 +61,7 @@ try:
             comment = str("NOT_RECOGNIZED_BY_ANY")
 
             try:
-                comment = str(r.recognize_google(audio2, language = 'en-US'))
+                comment = str(r.recognize_google(audio2, language = 'pt-BR'))
                 print(comment)
             except sr.UnknownValueError:
                 print("Google Speech Recognition could not understand audio")
