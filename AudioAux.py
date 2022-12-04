@@ -22,7 +22,7 @@ while True:
         LED_G.on()
         time.sleep(0.5)
 
-        with m as source: audioSrc = r.listen(source)
+        with m as source: audioSrc = r.listen(source,timeout=5, phrase_time_limit=5)
         LED_G.off()
         # recognize speech using Google Speech Recognition
         comment = str("NOT_RECOGNIZED_BY_ANY")
