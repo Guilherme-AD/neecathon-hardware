@@ -1,9 +1,12 @@
 import pyaudio
 import wave
+from gpiozero import LED, Button
 
-p = pyaudio.PyAudio()
-info = p.get_host_api_info_by_index(0)
-numdevices = info.get('deviceCount')
-for i in range(0, numdevices):
-    if (p.get_device_info_by_host_api_device_index(0, i).get('maxInputChannels')) > 0:
-        print("Input Device id ", i, " - ", p.get_device_info_by_host_api_device_index(0, i))
+#GPIO
+BUT_1 = Button(27)
+LED_R = LED(25)
+LED_G = LED(23)
+LED_B = LED(24)
+
+while not(BUT_1.is_active):
+    LED_G.on()
