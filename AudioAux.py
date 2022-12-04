@@ -5,6 +5,7 @@ import speech_recognition as sr
 from os import path
 import time
 import os
+import requests
 
 #GPIO
 BUT_1 = Button(27)
@@ -68,12 +69,19 @@ try:
 
             os.remove("test1.wav")
 
+            try:
+                comment_analysis = requests.get(f"http://3.88.45.53:8000/appForNlp/nlp_result?comentario={comment}&id_pessoa={0}", timeout=5)
+            except:
+                print("Connection Failed")
+                comment_analysis = "CONNECTION_FAILED"
+
             while True:
                 if(BUT_1.is_active):
                     LED_G.off()
                     time.sleep(0.5)
                     print("2")
                     break
+
 except Exception as e: 
     print(e)
     print("orra")
