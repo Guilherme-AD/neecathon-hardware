@@ -38,4 +38,5 @@ try:
                     print("2")
                     break
 except:
+    print("orra")
     audio.terminate()
