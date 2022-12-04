@@ -59,7 +59,8 @@ try:
             comment = str("NOT_RECOGNIZED_BY_ANY")
 
             try:
-                print(str(r.recognize_google(audio2, language = 'en-US')))
+                comment = str(r.recognize_google(audio2, language = 'en-US'))
+                print(comment)
             except sr.UnknownValueError:
                 print("Google Speech Recognition could not understand audio - Switching to Sphinx")
             except sr.RequestError as e:
