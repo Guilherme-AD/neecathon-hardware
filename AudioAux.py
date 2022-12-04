@@ -41,6 +41,6 @@ try:
                     time.sleep(0.5)
                     print("2")
                     break
-except KeyboardInterrupt:
+except:
     print("orra")
     audio.terminate()
