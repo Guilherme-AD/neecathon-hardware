@@ -45,6 +45,7 @@ try:
             print("recording2")
             stream.stop_stream()
             stream.close()
+            print(stream.is_stopped)
             wavefile = wave.open(f"test{count}.wav",'wb')
             wavefile.setnchannels(chans)
             wavefile.setsampwidth(audio.get_sample_size(form_1))
