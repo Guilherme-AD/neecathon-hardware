@@ -13,55 +13,22 @@ LED_R = LED(25)
 LED_G = LED(23)
 LED_B = LED(24)
 
+r = sr.Recognizer()
+m = sr.Microphone()
+
 print("init")
 while True:
     if(BUT_1.is_active):
         LED_G.on()
         time.sleep(0.5)
-        # create pyaudio stream
-        form_1 = pyaudio.paInt16 # 16-bit resolution
-        chans = 1 # 1 channel
-        samp_rate = 44100 # 44.1kHz sampling rate
-        chunk = 1024 # 2^12 samples for buffer
-        record_secs = 3 # seconds to record
-        dev_index = 1 # device index found by p.get_device_info_by_index(ii)
-        wav_output_filename = 'test1.wav' # name of .wav file
 
-        audio = pyaudio.PyAudio() # create pyaudio instantiation
-        frames = []
-        stream = audio.open(format = form_1,rate = samp_rate,channels = chans, \
-                input_device_index = dev_index,input = True, \
-                frames_per_buffer=chunk)
-        print("recording")
-        while True:
-            data = stream.read(chunk) #False
-            frames.append(data)
-            if BUT_1.is_active:
-                break
-        print("recording2")
-        stream.stop_stream()
-        stream.close()
-        audio.terminate()
-
-        wavefile = wave.open("audio.wav",'wb')
-        wavefile.setnchannels(chans)
-        wavefile.setsampwidth(audio.get_sample_size(form_1))
-        wavefile.setframerate(samp_rate)
-        wavefile.writeframes(b''.join(frames))
-        wavefile.close()
-
-        #Recognizing
-        audio_file = path.join(path.dirname(path.realpath(__file__)), "audio.wav")
-
-        r = sr.Recognizer()
-        with sr.AudioFile(audio_file) as source:
-            audio2 = r.record(source)  # read the entire audio file
-
+        with m as source: audioSrc = r.listen(source)
+    
         # recognize speech using Google Speech Recognition
         comment = str("NOT_RECOGNIZED_BY_ANY")
 
         try:
-            comment = str(r.recognize_google(audio2, language = 'pt-BR'))
+            comment = str(r.recognize_google(audioSrc, language = 'pt-BR'))
             print(comment)
         except sr.UnknownValueError:
             print("Google Speech Recognition could not understand audio")
