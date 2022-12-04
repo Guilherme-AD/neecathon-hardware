@@ -16,5 +16,6 @@ while True:
         while True:
             if(BUT_1.is_active):
                 LED_G.off()
+                time.sleep(0.5)
                 print("2")
                 break
