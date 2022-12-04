@@ -64,9 +64,9 @@ try:
                 comment = str(r.recognize_google(audio2, language = 'en-US'))
                 print(comment)
             except sr.UnknownValueError:
-                print("Google Speech Recognition could not understand audio - Switching to Sphinx")
+                print("Google Speech Recognition could not understand audio")
             except sr.RequestError as e:
-                print("Could not request results from Google Speech Recognition service - Switching to Sphinx; {0}".format(e))
+                print("Could not request results from Google Speech Recognition service; {0}".format(e))
 
             os.remove("test1.wav")
 
