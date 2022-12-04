@@ -37,7 +37,7 @@ try:
             print("recording")
             for ii in range(0,int((samp_rate/chunk)*3)):
                 print(ii)
-                data = stream.read(chunk, False)
+                data = stream.read(chunk)
                 frames.append(data)
             print("recording2")
             stream.stop_stream()
