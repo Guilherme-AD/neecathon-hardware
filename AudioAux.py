@@ -35,10 +35,11 @@ try:
                     input_device_index = dev_index,input = True, \
                     frames_per_buffer=chunk)
             print("recording")
-            for ii in range(0,int((samp_rate/chunk)*3)):
-                print(ii)
-                data = stream.read(chunk)
+            while True:
+                data = stream.read(chunk, False)
                 frames.append(data)
+                if BUT_1.is_active:
+                    break
             print("recording2")
             stream.stop_stream()
             stream.close()
@@ -75,12 +76,9 @@ try:
                 print("Connection Failed")
                 comment_analysis = "CONNECTION_FAILED"
 
-            while True:
-                if(BUT_1.is_active):
-                    LED_G.off()
-                    time.sleep(0.5)
-                    print("2")
-                    break
+            LED_G.off()
+            time.sleep(0.5)
+            print("2")
 
 except Exception as e: 
     print(e)
