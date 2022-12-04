@@ -71,20 +71,8 @@ while True:
         comment = str(r.recognize_google(audio, language = 'en-US'))
     except sr.UnknownValueError:
         print("Google Speech Recognition could not understand audio - Switching to Sphinx")
-        try:
-            comment = str(r.recognize_sphinx(audio, language = 'en-US'))
-        except sr.UnknownValueError:
-            print("Sphinx could not understand audio")
-        except sr.RequestError as e:
-            print("Sphinx error; {0}".format(e)) 
     except sr.RequestError as e:
         print("Could not request results from Google Speech Recognition service - Switching to Sphinx; {0}".format(e))
-        try:
-            comment = str(r.recognize_sphinx(audio, language = 'en-US'))
-        except sr.UnknownValueError:
-            print("Sphinx could not understand audio")
-        except sr.RequestError as e:
-            print("Sphinx error; {0}".format(e)) 
 
     #Sending to backend
     try:
