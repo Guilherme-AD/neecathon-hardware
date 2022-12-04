@@ -11,7 +11,7 @@ LED_B = LED(24)
 while True:
     if(BUT_1.is_active):
         LED_G.on()
-    while True:
-        if(BUT_1.is_active):
-            LED_G.off()
-            break
+        while True:
+            if(BUT_1.is_active):
+                LED_G.off()
+                break
