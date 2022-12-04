@@ -12,7 +12,7 @@ LED_B = LED(24)
 form_1 = pyaudio.paInt16 # 16-bit resolution
 chans = 1 # 1 channel
 samp_rate = 44100 # 44.1kHz sampling rate
-chunk = 512 # 2^12 samples for buffer
+chunk = 1024 # 2^12 samples for buffer
 record_secs = 3 # seconds to record
 dev_index = 1 # device index found by p.get_device_info_by_index(ii)
 wav_output_filename = 'test1.wav' # name of .wav file
@@ -33,9 +33,11 @@ try:
             print("recording")
             for ii in range(0,int((samp_rate/chunk)*3)):
                 print(ii)
-                data = stream.read(chunk)
+                data = stream.read(chunk, False)
                 frames.append(data)
             print("recording2")
+            stream.stop_stream()
+            stream.close()
             while True:
                 if(BUT_1.is_active):
                     LED_G.off()
