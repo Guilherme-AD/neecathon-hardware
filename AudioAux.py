@@ -23,7 +23,7 @@ while True:
         time.sleep(0.5)
 
         with m as source: audioSrc = r.listen(source)
-    
+        LED_G.off()
         # recognize speech using Google Speech Recognition
         comment = str("NOT_RECOGNIZED_BY_ANY")
 
@@ -41,6 +41,6 @@ while True:
             print("Connection Failed")
             comment_analysis = "CONNECTION_FAILED"
 
-        LED_G.off()
+        
         time.sleep(0.5)
         print("2")
