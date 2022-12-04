@@ -14,3 +14,4 @@ while True:
     while True:
         if(BUT_1.is_active):
             LED_G.off()
+            break
