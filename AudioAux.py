@@ -1,6 +1,8 @@
 import pyaudio
 import wave
 from gpiozero import LED, Button
+import speech_recognition as sr
+from os import path
 import time
 import os
 
@@ -45,6 +47,23 @@ try:
             wavefile.setframerate(samp_rate)
             wavefile.writeframes(b''.join(frames))
             wavefile.close()
+
+            #Recognizing
+            audio_file = path.join(path.dirname(path.realpath(__file__)), "test1.wav")
+
+            r = sr.Recognizer()
+            with sr.AudioFile(audio_file) as source:
+                audio2 = r.record(source)  # read the entire audio file
+
+            # recognize speech using Google Speech Recognition
+            comment = str("NOT_RECOGNIZED_BY_ANY")
+
+            try:
+                print(str(r.recognize_google(audio2, language = 'en-US')))
+            except sr.UnknownValueError:
+                print("Google Speech Recognition could not understand audio - Switching to Sphinx")
+            except sr.RequestError as e:
+                print("Could not request results from Google Speech Recognition service - Switching to Sphinx; {0}".format(e))
 
             os.remove("test1.wav")
 
