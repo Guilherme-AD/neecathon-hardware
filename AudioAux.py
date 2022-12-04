@@ -36,7 +36,7 @@ try:
                     frames_per_buffer=chunk)
             print("recording")
             while True:
-                data = stream.read(chunk, False)
+                data = stream.read(chunk)
                 frames.append(data)
                 if BUT_1.is_active:
                     break
