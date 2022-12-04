@@ -30,7 +30,9 @@ try:
         if(BUT_1.is_active):
             LED_G.on()
             time.sleep(0.5)
-            print("1")
+            for ii in range(0,int((samp_rate/chunk)*1)):
+                data = stream.read(chunk)
+                frames.append(data)
             while True:
                 if(BUT_1.is_active):
                     LED_G.off()
