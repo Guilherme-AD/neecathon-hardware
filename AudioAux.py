@@ -19,10 +19,6 @@ wav_output_filename = 'test1.wav' # name of .wav file
 
 audio = pyaudio.PyAudio() # create pyaudio instantiation
 
-# create pyaudio stream
-stream = audio.open(format = form_1,rate = samp_rate,channels = chans, \
-                    input_device_index = dev_index,input = True, \
-                    frames_per_buffer=chunk)
 print("init")
 frames = []
 try:
@@ -30,6 +26,10 @@ try:
         if(BUT_1.is_active):
             LED_G.on()
             time.sleep(0.5)
+            # create pyaudio stream
+            stream = audio.open(format = form_1,rate = samp_rate,channels = chans, \
+                    input_device_index = dev_index,input = True, \
+                    frames_per_buffer=chunk)
             print("recording")
             for ii in range(0,int((samp_rate/chunk)*3)):
                 print(ii)
