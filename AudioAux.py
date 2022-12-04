@@ -70,7 +70,7 @@ try:
             except sr.RequestError as e:
                 print("Could not request results from Google Speech Recognition service; {0}".format(e))
 
-            os.remove(f"test{count}.wav")
+            #os.remove(f"test{count}.wav")
 
             try:
                 comment_analysis = requests.get(f"http://3.88.45.53:8000/appForNlp/nlp_result?comentario={comment}&id_pessoa={0}", timeout=5)
