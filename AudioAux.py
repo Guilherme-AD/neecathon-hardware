@@ -32,6 +32,7 @@ try:
             time.sleep(0.5)
             print("recording")
             for ii in range(0,int((samp_rate/chunk)*1)):
+                print(ii)
                 data = stream.read(chunk)
                 frames.append(data)
             print("recording2")
