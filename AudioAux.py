@@ -42,6 +42,7 @@ try:
                     time.sleep(0.5)
                     print("2")
                     break
-except:
+except Exception as e: 
+    print(e)
     print("orra")
     audio.terminate()
