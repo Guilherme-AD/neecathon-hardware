@@ -8,5 +8,8 @@ LED_R = LED(25)
 LED_G = LED(23)
 LED_B = LED(24)
 
-while not(BUT_1.is_active):
-    LED_G.on()
+while True:
+    if(not(BUT_1.is_active)):
+        LED_G.on()
+    else:
+        LED_G.off()
