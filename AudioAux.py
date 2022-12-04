@@ -25,9 +25,11 @@ audio = pyaudio.PyAudio() # create pyaudio instantiation
 
 print("init")
 frames = []
+count = 0
 try:
     while True:
         if(BUT_1.is_active):
+            count += 1
             LED_G.on()
             time.sleep(0.5)
             # create pyaudio stream
@@ -51,7 +53,7 @@ try:
             wavefile.close()
 
             #Recognizing
-            audio_file = path.join(path.dirname(path.realpath(__file__)), "test1.wav")
+            audio_file = path.join(path.dirname(path.realpath(__file__)), f"test{count}.wav")
 
             r = sr.Recognizer()
             with sr.AudioFile(audio_file) as source:
@@ -68,7 +70,7 @@ try:
             except sr.RequestError as e:
                 print("Could not request results from Google Speech Recognition service; {0}".format(e))
 
-            os.remove("test1.wav")
+            os.remove(f"test{count}.wav")
 
             try:
                 comment_analysis = requests.get(f"http://3.88.45.53:8000/appForNlp/nlp_result?comentario={comment}&id_pessoa={0}", timeout=5)
