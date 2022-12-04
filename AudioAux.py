@@ -23,16 +23,18 @@ audio = pyaudio.PyAudio() # create pyaudio instantiation
 stream = audio.open(format = form_1,rate = samp_rate,channels = chans, \
                     input_device_index = dev_index,input = True, \
                     frames_per_buffer=chunk)
-print("recording")
+print("init")
 frames = []
 try:
     while True:
         if(BUT_1.is_active):
             LED_G.on()
             time.sleep(0.5)
+            print("recording")
             for ii in range(0,int((samp_rate/chunk)*1)):
                 data = stream.read(chunk)
                 frames.append(data)
+            print("recording2")
             while True:
                 if(BUT_1.is_active):
                     LED_G.off()
